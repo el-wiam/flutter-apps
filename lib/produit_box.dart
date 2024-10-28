@@ -1,19 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class ProduitBox extends StatelessWidget {
   final String nomProduit;
+  final bool selProduit;
+  final Function(bool?) onChanged;
+  final VoidCallback delProduit;
 
-  // Constructor to initialize the attribute
-  const ProduitBox({super.key,required this.nomProduit});
+  ProduitBox({
+    required this.nomProduit,
+    required this.selProduit,
+    required this.onChanged,
+    required this.delProduit,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 120, // Define the height
-      child: Center(
-        child: Text(
-          nomProduit,
-          style: const TextStyle(fontSize: 20),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+      child: Slidable(
+        key: ValueKey(nomProduit), // Clé unique
+        endActionPane: ActionPane(
+          motion: const ScrollMotion(),
+          children: [
+            SlidableAction(
+              onPressed: (_) => delProduit(),
+              backgroundColor: Colors.red,
+              icon: Icons.delete,
+              label: 'Supprimer',
+            ),
+          ],
+        ),
+        child: Container(
+          height: 60,
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: Colors.grey[200],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Checkbox(
+                    value: selProduit,
+                    onChanged: onChanged,
+                  ),
+                  Text(nomProduit),
+                ],
+              ),
+              IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: delProduit,
+              ),
+            ],
+          ),
         ),
       ),
     );
